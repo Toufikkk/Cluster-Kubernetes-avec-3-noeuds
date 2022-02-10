@@ -1,0 +1,46 @@
+version: "3.3"
+services:
+  dolibarr:
+    container_name: dolibarr
+    image: zaraith/dolibarr:dolitest
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    ports:
+      - 80:80
+    volumes:
+      - dolibarr_conf:/var/www/html/dolibarr/conf
+      - dolibarr_docs:/var/www/html/dolibarr/documents
+    networks:
+      - dolibarrNetwork
+  db:
+    container_name: db
+    image: mariadb
+     command: --character_set_client=utf8 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --character-set-client-handshake=FALSE
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=test
+    volumes:
+      - mariadb:/var/lib/mysql 
+    networks:
+      - dolibarrNetwork
+  phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            PMA_HOST: mariadb
+        depends_on:
+            - mariadb
+        ports:
+            - "8080:80"
+        networks:
+            - dolibarrNetwork
+networks:
+  dolibarrNetwork:
+volumes:
+  mariadb:
+  dolibarr_conf:
+  dolibarr_docs:

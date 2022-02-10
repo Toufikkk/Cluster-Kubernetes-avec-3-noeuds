@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.19.0 (f63a961c)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: dolibarr
+  name: dolibarr
+spec:
+  selector:
+    matchLabels:
+      io.kompose.service: dolibarr
+  replicas: 2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.19.0 (f63a961c)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: dolibarr
+    spec:
+      containers:
+      - image: zaraith/dolibarr:dolitest
+        name: dolibarr
+        ports:
+        - containerPort: 80
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/www/dolibarr/htdocs/conf
+          name: dolibarr-conf
+        - mountPath: /var/www/dolibarr/htdocs/documents
+          name: dolibarr-docs
+      restartPolicy: Always
+      volumes:
+      - name: dolibarr-conf
+        persistentVolumeClaim:
+          claimName: dolibarr-conf
+      - name: dolibarr-docs
+        persistentVolumeClaim:
+          claimName: dolibarr-docs
+status: {}

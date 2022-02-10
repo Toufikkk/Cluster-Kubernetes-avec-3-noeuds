@@ -1,0 +1,16 @@
+############################################
+##### KinD Config File for the project #####
+############################################
+#
+# First 2 lines = minimal config
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+#
+# Define Name
+name: project-cluster
+#
+# Defines nodes
+nodes:
+- role: control-plane
+- role: worker
+- role: worker
